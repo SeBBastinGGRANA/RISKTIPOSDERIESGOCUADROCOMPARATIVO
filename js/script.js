@@ -1,115 +1,62 @@
 // script.js
-'use strict';
+document.addEventListener('DOMContentLoaded', function() {
+    // Navegación entre secciones
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const sections = document.querySelectorAll('.risk-section');
 
-// Configuración global
-const CONFIG = {
-    ANIMATION_DELAY: 100,
-    SEARCH_DEBOUNCE: 300,
-    LOADING_MIN_TIME: 1000
-};
+    navButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const targetSection = this.getAttribute('data-section');
 
-// Estado de la aplicación
-const AppState = {
-    currentSection: 'financieros',
-    currentFilter: 'all',
-    searchTerm: '',
-    isLoading: true
-};
+            // Remover clase active de todos los botones y secciones
+            navButtons.forEach(btn => btn.classList.remove('active'));
+            sections.forEach(section => section.classList.remove('active'));
 
-// Utilidades
-const Utils = {
-    debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    },
+            // Agregar clase active al botón clickeado y sección correspondiente
+            this.classList.add('active');
+            document.getElementById(targetSection).classList.add('active');
+        });
+    });
 
-    announce(message) {
-        const announcement = document.createElement('div');
-        announcement.setAttribute('aria-live', 'polite');
-        announcement.setAttribute('aria-atomic', 'true');
-        announcement.className = 'sr-only';
-        announcement.textContent = message;
-        document.body.appendChild(announcement);
-        setTimeout(() => document.body.removeChild(announcement), 1000);
-    },
+    // Expandir/contraer tarjetas de riesgo
+    const riskCards = document.querySelectorAll('.risk-card');
 
-    updateResultsCount() {
-        const visibleRows = document.querySelectorAll('#riskTable tbody tr:not(.hidden)').length;
-        const totalRows = document.querySelectorAll('#riskTable tbody tr').length;
-        const resultsElement = document.getElementById('resultsCount');
-        
-        if (resultsElement) {
-            resultsElement.textContent = `Mostrando ${visibleRows} de ${totalRows} riesgos`;
-        }
-    }
-};
+    riskCards.forEach(card => {
+        card.addEventListener('click', function() {
+            this.classList.toggle('expanded');
+        });
+    });
 
-// Gestión de la navegación
-class NavigationManager {
-    constructor() {
-        this.navButtons = document.querySelectorAll('.nav-btn');
-        this.sections = document.querySelectorAll('.risk-section');
-        this.init();
-    }
+    // Filtrado de tabla comparativa
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const tableRows = document.querySelectorAll('#riskTable tbody tr');
 
-    init() {
-        this.navButtons.forEach(button => {
-            button.addEventListener('click', (e) => this.handleNavigation(e));
-            button.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    this.handleNavigation(e);
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const filter = this.getAttribute('data-filter');
+
+            // Actualizar botones activos
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+
+            // Filtrar filas
+            tableRows.forEach(row => {
+                const category = row.getAttribute('data-category');
+                
+                if (filter === 'all' || category === filter) {
+                    row.classList.remove('hidden');
+                    row.style.display = '';
+                } else {
+                    row.classList.add('hidden');
+                    row.style.display = 'none';
                 }
             });
         });
-    }
+    });
 
-    handleNavigation(event) {
-        const targetSection = event.currentTarget.getAttribute('data-section');
-        
-        if (targetSection === AppState.currentSection) return;
-
-        this.updateActiveStates(event.currentTarget, targetSection);
-        this.switchSection(targetSection);
-        
-        AppState.currentSection = targetSection;
-        Utils.announce(`Navegando a sección: ${this.getSectionTitle(targetSection)}`);
-    }
-
-    updateActiveStates(activeButton, targetSection) {
-        // Actualizar botones
-        this.navButtons.forEach(btn => {
-            btn.classList.remove('active');
-            btn.setAttribute('aria-pressed', 'false');
-        });
-        
-        activeButton.classList.add('active');
-        activeButton.setAttribute('aria-pressed', 'true');
-
-        // Actualizar secciones
-        this.sections.forEach(section => section.classList.remove('active'));
-        document.getElementById(targetSection).classList.add('active');
-    }
-
-    switchSection(targetSection) {
-        const section = document.getElementById(targetSection);
-        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        
-        // Animar tarjetas si es una sección de riesgos
-        if (targetSection !== 'comparativo') {
-            this.animateCards(section);
-        }
-    }
-
-    animateCards(section) {
-        const cards = section.querySelectorAll('.risk-card');
+    // Animación de entrada para las tarjetas
+    function animateCards() {
+        const cards = document.querySelectorAll('.risk-card');
         cards.forEach((card, index) => {
             card.style.opacity = '0';
             card.style.transform = 'translateY(30px)';
@@ -118,321 +65,86 @@ class NavigationManager {
                 card.style.transition = 'all 0.5s ease';
                 card.style.opacity = '1';
                 card.style.transform = 'translateY(0)';
-            }, index * CONFIG.ANIMATION_DELAY);
+            }, index * 100);
         });
     }
 
-    getSectionTitle(sectionId) {
-        const titles = {
-            'financieros': 'Riesgos Financieros',
-            'no-financieros': 'Riesgos No Financieros',
-            'comparativo': 'Cuadro Comparativo'
-        };
-        return titles[sectionId] || sectionId;
-    }
-}
+    // Llamar animación inicial
+    animateCards();
 
-// Gestión de tarjetas de riesgo
-class RiskCardManager {
-    constructor() {
-        this.riskCards = document.querySelectorAll('.risk-card');
-        this.init();
-    }
+    // Búsqueda en tabla (funcionalidad adicional)
+    function addSearchFunctionality() {
+        const searchContainer = document.querySelector('.comparison-filter');
+        const searchInput = document.createElement('input');
+        searchInput.type = 'text';
+        searchInput.placeholder = 'Buscar tipo de riesgo...';
+        searchInput.style.cssText = `
+            padding: 10px 15px;
+            border: 2px solid #667eea;
+            border-radius: 20px;
+            margin-left: 1rem;
+            width: 200px;
+            outline: none;
+        `;
 
-    init() {
-        this.riskCards.forEach(card => {
-            card.addEventListener('click', () => this.toggleCard(card));
-            card.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    this.toggleCard(card);
+        searchContainer.appendChild(searchInput);
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const activeFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
+
+            tableRows.forEach(row => {
+                const rowText = row.textContent.toLowerCase();
+                const category = row.getAttribute('data-category');
+                const matchesSearch = rowText.includes(searchTerm);
+                const matchesFilter = activeFilter === 'all' || category === activeFilter;
+
+                if (matchesSearch && matchesFilter) {
+                    row.style.display = '';
+                    row.classList.remove('hidden');
+                } else {
+                    row.style.display = 'none';
+                    row.classList.add('hidden');
                 }
             });
-
-            // Efectos de hover mejorados
-            card.addEventListener('mouseenter', () => this.handleCardHover(card, true));
-            card.addEventListener('mouseleave', () => this.handleCardHover(card, false));
         });
     }
 
-    toggleCard(card) {
-        const isExpanded = card.classList.contains('expanded');
-        const riskType = card.querySelector('h3').textContent;
-        
-        card.classList.toggle('expanded');
-        card.setAttribute('aria-expanded', !isExpanded);
-        
-        const action = isExpanded ? 'contraída' : 'expandida';
-        Utils.announce(`Tarjeta ${riskType} ${action}`);
-    }
+    // Agregar funcionalidad de búsqueda
+    addSearchFunctionality();
 
-    handleCardHover(card, isHovering) {
-        if (isHovering) {
-            card.style.transform = 'translateY(-8px) scale(1.02)';
-        } else if (!card.classList.contains('expanded')) {
-            card.style.transform = 'translateY(0) scale(1)';
-        }
-    }
-
-    expandAllCards() {
-        this.riskCards.forEach(card => {
-            card.classList.add('expanded');
-            card.setAttribute('aria-expanded', 'true');
-        });
-    }
-
-    collapseAllCards() {
-        this.riskCards.forEach(card => {
-            card.classList.remove('expanded');
-            card.setAttribute('aria-expanded', 'false');
-        });
-    }
-}
-
-// Gestión de la tabla comparativa
-class TableManager {
-    constructor() {
-        this.filterButtons = document.querySelectorAll('.filter-btn');
-        this.tableRows = document.querySelectorAll('#riskTable tbody tr');
-        this.searchInput = document.getElementById('searchInput');
-        this.init();
-    }
-
-    init() {
-        // Filtros
-        this.filterButtons.forEach(button => {
-            button.addEventListener('click', (e) => this.handleFilter(e));
-        });
-
-        // Búsqueda con debounce
-        if (this.searchInput) {
-            const debouncedSearch = Utils.debounce((term) => this.handleSearch(term), CONFIG.SEARCH_DEBOUNCE);
-            this.searchInput.addEventListener('input', (e) => {
-                debouncedSearch(e.target.value);
+    // Efecto de scroll suave para navegación
+    function smoothScrollToSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
             });
         }
-
-        // Inicializar contador
-        Utils.updateResultsCount();
     }
 
-    handleFilter(event) {
-        const filter = event.currentTarget.getAttribute('data-filter');
-        
-        if (filter === AppState.currentFilter) return;
+    // Contador de riesgos por categoría
+    function updateRiskCounters() {
+        const financialCount = document.querySelectorAll('[data-category="financiero"]').length;
+        const nonFinancialCount = document.querySelectorAll('[data-category="no-financiero"]').length;
 
-        // Actualizar botones activos
-        this.filterButtons.forEach(btn => btn.classList.remove('active'));
-        event.currentTarget.classList.add('active');
-
-        AppState.currentFilter = filter;
-        this.applyFilters();
-        
-        Utils.announce(`Filtro aplicado: ${this.getFilterName(filter)}`);
+        console.log(`Riesgos Financieros: ${financialCount}`);
+        console.log(`Riesgos No Financieros: ${nonFinancialCount}`);
     }
 
-    handleSearch(searchTerm) {
-        AppState.searchTerm = searchTerm.toLowerCase();
-        this.applyFilters();
-        
-        if (searchTerm) {
-            Utils.announce(`Búsqueda realizada: ${searchTerm}`);
-        }
-    }
+    updateRiskCounters();
 
-    applyFilters() {
-        let visibleCount = 0;
-
-        this.tableRows.forEach(row => {
-            const category = row.getAttribute('data-category');
-            const rowText = row.textContent.toLowerCase();
-            
-            const matchesFilter = AppState.currentFilter === 'all' || category === AppState.currentFilter;
-            const matchesSearch = !AppState.searchTerm || rowText.includes(AppState.searchTerm);
-
-            if (matchesFilter && matchesSearch) {
-                row.style.display = '';
-                row.classList.remove('hidden');
-                visibleCount++;
-            } else {
-                row.style.display = 'none';
-                row.classList.add('hidden');
-            }
+    // Tooltip para las tarjetas
+    riskCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px) scale(1.02)';
         });
 
-        Utils.updateResultsCount();
-    }
-
-    getFilterName(filter) {
-        const names = {
-            'all': 'Todos los riesgos',
-            'financiero': 'Riesgos financieros',
-            'no-financiero': 'Riesgos no financieros'
-        };
-        return names[filter] || filter;
-    }
-}
-
-// Gestión del estado de carga
-class LoadingManager {
-    constructor() {
-        this.loadingOverlay = document.getElementById('loading');
-        this.startTime = Date.now();
-    }
-
-    hide() {
-        const elapsedTime = Date.now() - this.startTime;
-        const remainingTime = Math.max(0, CONFIG.LOADING_MIN_TIME - elapsedTime);
-
-        setTimeout(() => {
-            if (this.loadingOverlay) {
-                this.loadingOverlay.classList.add('hidden');
-                AppState.isLoading = false;
-                
-                // Remover del DOM después de la transición
-                setTimeout(() => {
-                    if (this.loadingOverlay.parentNode) {
-                        this.loadingOverlay.parentNode.removeChild(this.loadingOverlay);
-                    }
-                }, 500);
-            }
-        }, remainingTime);
-    }
-}
-
-// Funcionalidades adicionales
-class FeatureManager {
-    constructor() {
-        this.init();
-    }
-
-    init() {
-        this.addKeyboardShortcuts();
-        this.addPrintSupport();
-        this.addAnalytics();
-    }
-
-    addKeyboardShortcuts() {
-        document.addEventListener('keydown', (e) => {
-            // Alt + 1, 2, 3 para navegar entre secciones
-            if (e.altKey && ['1', '2', '3'].includes(e.key)) {
-                e.preventDefault();
-                const sections = ['financieros', 'no-financieros', 'comparativo'];
-                const sectionIndex = parseInt(e.key) - 1;
-                
-                if (sections[sectionIndex]) {
-                    const button = document.querySelector(`[data-section="${sections[sectionIndex]}"]`);
-                    if (button) button.click();
-                }
-            }
-
-            // Escape para cerrar todas las tarjetas expandidas
-            if (e.key === 'Escape') {
-                document.querySelectorAll('.risk-card.expanded').forEach(card => {
-                    card.classList.remove('expanded');
-                    card.setAttribute('aria-expanded', 'false');
-                });
+        card.addEventListener('mouseleave', function() {
+            if (!this.classList.contains('expanded')) {
+                this.style.transform = 'translateY(0) scale(1)';
             }
         });
-    }
-
-    addPrintSupport() {
-        // Expandir todas las tarjetas antes de imprimir
-        window.addEventListener('beforeprint', () => {
-            document.querySelectorAll('.risk-card .details').forEach(details => {
-                details.style.opacity = '1';
-                details.style.maxHeight = 'none';
-            });
-        });
-    }
-
-    addAnalytics() {
-        // Simular eventos de analytics (reemplazar con GA4 o similar)
-        const trackEvent = (action, category, label) => {
-            console.log(`Analytics: ${category} - ${action} - ${label}`);
-            // gtag('event', action, { event_category: category, event_label: label });
-        };
-
-        // Tracking de navegación
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('nav-btn')) {
-                const section = e.target.getAttribute('data-section');
-                trackEvent('navigate', 'navigation', section);
-            }
-
-            if (e.target.closest('.risk-card')) {
-                const riskType = e.target.closest('.risk-card').getAttribute('data-risk');
-                trackEvent('expand_card', 'interaction', riskType);
-            }
-        });
-    }
-}
-
-// Inicialización de la aplicación
-class App {
-    constructor() {
-        this.loadingManager = new LoadingManager();
-        this.navigationManager = null;
-        this.riskCardManager = null;
-        this.tableManager = null;
-        this.featureManager = null;
-    }
-
-    async init() {
-        try {
-            // Esperar a que el DOM esté completamente cargado
-            await this.waitForDOM();
-
-            // Inicializar componentes
-            this.navigationManager = new NavigationManager();
-            this.riskCardManager = new RiskCardManager();
-            this.tableManager = new TableManager();
-            this.featureManager = new FeatureManager();
-
-            // Ocultar loading
-            this.loadingManager.hide();
-
-            // Animación inicial
-            this.initialAnimation();
-
-            console.log('🚀 Aplicación inicializada correctamente');
-            
-        } catch (error) {
-            console.error('❌ Error al inicializar la aplicación:', error);
-            this.loadingManager.hide();
-        }
-    }
-
-    waitForDOM() {
-        return new Promise((resolve) => {
-            if (document.readyState === 'complete') {
-                resolve();
-            } else {
-                window.addEventListener('load', resolve);
-            }
-        });
-    }
-
-    initialAnimation() {
-        // Animar las tarjetas de la sección activa
-        const activeSection = document.querySelector('.risk-section.active');
-        if (activeSection && this.navigationManager) {
-            this.navigationManager.animateCards(activeSection);
-        }
-    }
-}
-
-// Inicializar aplicación cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', () => {
-    const app = new App();
-    app.init();
-});
-
-// Manejo de errores globales
-window.addEventListener('error', (e) => {
-    console.error('Error global capturado:', e.error);
-});
-
-window.addEventListener('unhandledrejection', (e) => {
-    console.error('Promise rechazada no manejada:', e.reason);
+    });
 });
