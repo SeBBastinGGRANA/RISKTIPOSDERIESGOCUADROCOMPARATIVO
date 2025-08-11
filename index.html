@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Guía interactiva de tipos de riesgos empresariales - Clasificación y análisis de riesgos financieros y no financieros">
+    <meta name="keywords" content="riesgos empresariales, gestión de riesgos, riesgos financieros, riesgos operacionales">
+    <meta name="author" content="Universidad El Bosque">
+    <meta property="og:title" content="Guía de Tipos de Riesgos Empresariales">
+    <meta property="og:description" content="Herramienta interactiva para el análisis y clasificación de riesgos empresariales">
+    <meta property="og:type" content="website">
+    
+    <title>Guía de Tipos de Riesgos Empresariales | Universidad El Bosque</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Preload critical resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Spinner -->
+    <div id="loading" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Cargando guía de riesgos...</p>
+    </div>
+
+    <header>
+        <div class="header-content">
+            <h1>Guía de Tipos de Riesgos Empresariales</h1>
+            <p>Clasificación y análisis de riesgos financieros y no financieros</p>
+            <div class="header-badge">
+                <span>Universidad El Bosque</span>
+            </div>
+        </div>
+    </header>
+
+    <nav class="navigation" role="navigation" aria-label="Navegación principal">
+        <button class="nav-btn active" data-section="financieros" aria-pressed="true">
+            <span class="nav-icon">💰</span>
+            Riesgos Financieros
+        </button>
+        <button class="nav-btn" data-section="no-financieros" aria-pressed="false">
+            <span class="nav-icon">⚙️</span>
+            Riesgos No Financieros
+        </button>
+        <button class="nav-btn" data-section="comparativo" aria-pressed="false">
+            <span class="nav-icon">📊</span>
+            Cuadro Comparativo
+        </button>
+    </nav>
+
+    <main class="container">
+        <!-- Sección Riesgos Financieros -->
+        <section id="financieros" class="risk-section active" aria-labelledby="financieros-title">
+            <h2 id="financieros-title">Riesgos Financieros</h2>
+            <p class="section-intro">Probabilidad de eventos con consecuencias económicas negativas directas</p>
+            
+            <div class="risk-cards">
+                <article class="risk-card" data-risk="mercado" tabindex="0" role="button" aria-expanded="false">
+                    <h3>🏦 Riesgo de Mercado</h3>
+                    <div class="card-content">
+                        <p><strong>Definición:</strong> Pérdidas por cambios en precios de mercados financieros</p>
+                        <div class="details">
+                            <h4>Tipos:</h4>
+                            <ul>
+                                <li><strong>Tipo de interés:</strong> Variación de tasas en contra de la posición</li>
+                                <li><strong>Tipo de cambio:</strong> Volatilidad en divisas</li>
+                                <li><strong>Precio de acciones:</strong> Fluctuaciones bursátiles</li>
+                                <li><strong>Commodities:</strong> Variación en materias primas</li>
+                            </ul>
+                            <div class="example">
+                                <strong>💡 Ejemplo:</strong> Una aerolínea afectada por el alza del petróleo
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="risk-card" data-risk="liquidez" tabindex="0" role="button" aria-expanded="false">
+                    <h3>💧 Riesgo de Liquidez</h3>
+                    <div class="card-content">
+                        <p><strong>Definición:</strong> Incapacidad para cumplir obligaciones de pago a corto plazo</p>
+                        <div class="details">
+                            <h4>Características:</h4>
+                            <ul>
+                                <li>Desfase entre fechas de cobro y pago</li>
+                                <li>Activos valiosos pero poco líquidos</li>
+                                <li>Puede afectar empresas rentables</li>
+                            </ul>
+                            <div class="example">
+                                <strong>💡 Ejemplo:</strong> Ventas a crédito 90 días, pagos a proveedores 30 días
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="risk-card" data-risk="credito" tabindex="0" role="button" aria-expanded="false">
+                    <h3>🤝 Riesgo de Crédito</h3>
+                    <div class="card-content">
+                        <p><strong>Definición:</strong> Pérdida por incumplimiento de contrapartes</p>
+                        <div class="details">
+                            <h4>Componentes de cálculo:</h4>
+                            <ul>
+                                <li><strong>PD:</strong> Probabilidad de Incumplimiento</li>
+                                <li><strong>EAD:</strong> Exposición en el Momento del Incumplimiento</li>
+                                <li><strong>LGD:</strong> Pérdida Dado el Incumplimiento</li>
+                            </ul>
+                            <div class="example">
+                                <strong>💡 Ejemplo:</strong> Cliente importante no paga una factura
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Sección Riesgos No Financieros -->
+        <section id="no-financieros" class="risk-section" aria-labelledby="no-financieros-title">
+            <h2 id="no-financieros-title">Riesgos No Financieros</h2>
+            <p class="section-intro">Riesgos sin origen financiero directo pero con impacto económico significativo</p>
+            
+            <div class="risk-cards">
+                <article class="risk-card" data-risk="proteccionismo" tabindex="0" role="button" aria-expanded="false">
+                    <h3>🛡️ Proteccionismo/Territorialismo</h3>
+                    <div class="card-content">
+                        <p><strong>Definición:</strong> Políticas que restringen el comercio internacional</p>
+                        <div class="details">
+                            <h4>Medidas típicas:</h4>
+                            <ul>
+                                <li>Aranceles e impuestos a importación</li>
+                                <li>Cuotas y barreras técnicas</li>
+                                <li>Subsidios a productores nacionales</li>
+                            </ul>
+                            <div class="example">
+                                <strong>💡 Impacto:</strong> Aumento de costos en cadena de suministro
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="risk-card" data-risk="ciberseguridad" tabindex="0" role="button" aria-expanded="false">
+                    <h3>🔒 Riesgo de Ciberseguridad</h3>
+                    <div class="card-content">
+                        <p><strong>Definición:</strong> Amenazas y vulnerabilidades en sistemas digitales</p>
+                        <div class="details">
+                            <h4>Tipos de ataques:</h4>
+                            <ul>
+                                <li><strong>Phishing:</strong> Suplantación de identidad</li>
+                                <li><strong>Ransomware:</strong> Secuestro de información</li>
+                                <li><strong>Pharming:</strong> Redirección a sitios falsos</li>
+                            </ul>
+                            <div class="example">
+                                <strong>💡 Impacto:</strong> Robo de datos, interrupciones operativas
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="risk-card" data-risk="tecnologico" tabindex="0" role="button" aria-expanded="false">
+                    <h3>🚀 Tecnologías Disruptivas</h3>
+                    <div class="card-content">
+                        <p><strong>Definición:</strong> Incertidumbre por nuevas tecnologías</p>
+                        <div class="details">
+                            <h4>Características:</h4>
+                            <ul>
+                                <li>Innovaciones que transforman industrias</li>
+                                <li>Tecnologías inmaduras o no probadas</li>
+                                <li>Falta de gobernanza adecuada</li>
+                            </ul>
+                            <div class="example">
+                                <strong>💡 Ejemplo:</strong> Obsolescencia frente a competidores innovadores
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="risk-card" data-risk="operacional" tabindex="0" role="button" aria-expanded="false">
+                    <h3>⚙️ Riesgo Operacional</h3>
+                    <div class="card-content">
+                        <p><strong>Definición:</strong> Fallas en procesos, personal, sistemas o eventos externos</p>
+                        <div class="details">
+                            <h4>Categorías:</h4>
+                            <ul>
+                                <li><strong>Procesos:</strong> Errores en producción, logística</li>
+                                <li><strong>Personal:</strong> Fraudes, errores humanos, huelgas</li>
+                                <li><strong>Sistemas:</strong> Fallas tecnológicas</li>
+                                <li><strong>Eventos externos:</strong> Desastres naturales</li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="risk-card" data-risk="climatico" tabindex="0" role="button" aria-expanded="false">
+                    <h3>🌍 Riesgos Climáticos</h3>
+                    <div class="card-content">
+                        <p><strong>Definición:</strong> Impacto del cambio climático en operaciones</p>
+                        <div class="details">
+                            <h4>Manifestaciones:</h4>
+                            <ul>
+                                <li>Eventos climáticos extremos</li>
+                                <li>Escasez de recursos naturales</li>
+                                <li>Cambios en regulación ambiental</li>
+                            </ul>
+                            <div class="example">
+                                <strong>💡 Impacto:</strong> Daños a infraestructura, interrupciones
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Sección Cuadro Comparativo -->
+        <section id="comparativo" class="risk-section" aria-labelledby="comparativo-title">
+            <h2 id="comparativo-title">Cuadro Comparativo</h2>
+            <div class="comparison-container">
+                <div class="comparison-controls">
+                    <div class="comparison-filter">
+                        <button class="filter-btn active" data-filter="all">📋 Todos</button>
+                        <button class="filter-btn" data-filter="financiero">💰 Financieros</button>
+                        <button class="filter-btn" data-filter="no-financiero">⚙️ No Financieros</button>
+                    </div>
+                    
+                    <div class="search-container">
+                        <input type="text" id="searchInput" placeholder="🔍 Buscar tipo de riesgo..." aria-label="Buscar en tabla de riesgos">
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="riskTable" role="table" aria-label="Tabla comparativa de riesgos">
+                        <thead>
+                            <tr>
+                                <th scope="col">Tipo</th>
+                                <th scope="col">Categoría</th>
+                                <th scope="col">Definición</th>
+                                <th scope="col">Origen Principal</th>
+                                <th scope="col">Ejemplo de Impacto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-category="financiero">
+                                <td>Riesgo de Mercado</td>
+                                <td><span class="badge financial">Financiero</span></td>
+                                <td>Pérdidas por fluctuaciones en mercados financieros</td>
+                                <td>Volatilidad de precios, tasas, divisas</td>
+                                <td>Aumento del costo de deuda por alza de tasas</td>
+                            </tr>
+                            <tr data-category="financiero">
+                                <td>Riesgo de Liquidez</td>
+                                <td><span class="badge financial">Financiero</span></td>
+                                <td>Incapacidad de cumplir pagos a corto plazo</td>
+                                <td>Desfase temporal entre ingresos y gastos</td>
+                                <td>Quiebra por falta de efectivo operativo</td>
+                            </tr>
+                            <tr data-category="financiero">
+                                <td>Riesgo de Crédito</td>
+                                <td><span class="badge financial">Financiero</span></td>
+                                <td>Incumplimiento de contrapartes</td>
+                                <td>Insolvencia de clientes o deudores</td>
+                                <td>Pérdida por cliente que no paga</td>
+                            </tr>
+                            <tr data-category="no-financiero">
+                                <td>Proteccionismo</td>
+                                <td><span class="badge non-financial">No Financiero</span></td>
+                                <td>Restricciones al comercio internacional</td>
+                                <td>Políticas gubernamentales proteccionistas</td>
+                                <td>Aumento de costos por aranceles</td>
+                            </tr>
+                            <tr data-category="no-financiero">
+                                <td>Ciberseguridad</td>
+                                <td><span class="badge non-financial">No Financiero</span></td>
+                                <td>Amenazas a sistemas digitales</td>
+                                <td>Ataques maliciosos, errores humanos</td>
+                                <td>Secuestro de información (ransomware)</td>
+                            </tr>
+                            <tr data-category="no-financiero">
+                                <td>Tecnologías Disruptivas</td>
+                                <td><span class="badge non-financial">No Financiero</span></td>
+                                <td>Incertidumbre por nuevas tecnologías</td>
+                                <td>Innovaciones que transforman industrias</td>
+                                <td>Obsolescencia frente a competidores</td>
+                            </tr>
+                            <tr data-category="no-financiero">
+                                <td>Operacional</td>
+                                <td><span class="badge non-financial">No Financiero</span></td>
+                                <td>Fallas en procesos, personal o sistemas</td>
+                                <td>Errores internos, eventos externos</td>
+                                <td>Paralización por desastre natural</td>
+                            </tr>
+                            <tr data-category="no-financiero">
+                                <td>Climático</td>
+                                <td><span class="badge non-financial">No Financiero</span></td>
+                                <td>Impacto del cambio climático</td>
+                                <td>Eventos extremos, escasez recursos</td>
+                                <td>Daños a infraestructura por huracán</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="table-stats">
+                    <span id="resultsCount">Mostrando 8 de 8 riesgos</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 - Guía de Riesgos Empresariales</p>
+            <p>Basada en contenido académico de <strong>Universidad El Bosque</strong></p>
+            <div class="footer-links">
+                <a href="https://github.com/tu-usuario/proyecto-riesgos-empresariales" target="_blank" rel="noopener" aria-label="Ver código en GitHub">
+                    <span>🔗 GitHub</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/script.js"></script>
+</body>
+</html>
